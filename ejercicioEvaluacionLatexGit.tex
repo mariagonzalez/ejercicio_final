@@ -1,0 +1,140 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{makeidx}
+\usepackage{graphicx}
+\usepackage{lmodern}
+\usepackage{cite}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\author{María del Carmen González Martínez}
+\title{Computación bio-inspirada. Sistemas basados en colonias de hormigas}
+\begin{document}
+\maketitle
+
+\section*{Resumen} 
+\addcontentsline{toc}{section}{Resumen} 
+\markboth{RESUMEN}{RESUMEN} % encabezado
+
+La computación bio-inspirada (Bioinspired Algorithms/Natural Computing), se basa en emplear analogías con sistemas naturales o sociales para la resolución de problemas. El objetivo principal es simular el comportamiento de organizaciones naturales para diseñar métodos heurísticos no determinísticos de busqueda, aprendizaje e imitación del comportamiento. 
+Es una metáfora biológica para resolver problemas no determinísticos, que presentan implícitamente una estructura paralela (múltiples agentes) y son adaptativos, es decir, utilizan la realimentación con el entorno para modificar el modelo y los parámetros. Algunos ejemplos de modelos de computación bio-inspirada son, los algoritmos evolutivos, inmunológicos, basados en enjambres (swarm intelligence) y sistemas de redes neuronales. Los sistemas basados en colonia de hormigas, estarían dentro del grupo de algoritmos basados en enjambres.
+La computación bio-inspirada está actualmente muy presente en el área de investigación y desarrollo de muchas empresas e instituciones de prestigio.
+
+\section{Introducción}
+La expresión \emph{swarm intelligence} se acuño en 1988 a partir del trabajo de los investigadores Beni, Hackwood y Wang.
+
+\begin{center}
+\fbox{Swarm intelligence $\Rightarrow$ La inteligencia colectiva emergente de un grupo de agentes simples.} 
+\end{center}
+
+Se trata de un sistema por el cual, el comportamiento colectivo de agentes \textbf{no sofisticados} interactúa localmente con el entorno, proporcionando un patrón global de funcionamiento tanto coherente como emergente.
+
+\begin{quote}
+\textit{``Partes tontas/mudas, conectadas adecuadamente en un enjambre, producen resultados elegantes/inteligentes''}
+\end{quote}
+
+Estos sistemas pueden aplicarse en tareas como:
+
+\begin{center}
+\begin{itemize}
+\item Búsqueda de rutas para una red de satélites. 
+\item Web clustering. 
+\item Investigación microbiológica. 
+\item Representación de árboles y grafos.
+\item \ldots
+\end{itemize}
+\end{center}
+
+En las siguientes secciones veremos como funcionan las hormigas naturales y como su comportamiento puede ser simulado y utilizado para resolver diversas tareas.
+
+\section{Colonia de hormigas naturales \& hormigas artificiales}
+
+Para comenzar diremos que las hormigas naturales tienen una característica muy interesante, y es que una colonia de hormigas es capaz de encontrar el/los caminos más cortos entre el hormiguero y la comida. El detalle está, en que las hormigas \textbf{son ciegas}. Entonces, ¿Cómo lo hacen?
+
+Las hormigas naturales, durante su desplazamiento, depositan una sustancia llamada \textbf{\textit{feromona}}, que es detectada por el resto de la colonia. Dicho rastro permite al resto de hormigas conocer el camino que les llevará desde el hormiguero a la comida y viceversa.
+
+Cada vez que una hormiga llega a una intersección, decide el camino a seguir de modo probabilístico, eligiendo con mayor probabilidad, los caminos con un alto rastro de feromona. De esta forma, las bifurcaciones más prometedoras (las más cercanas a la comida), van acumulando feromona al ser recorridas con mayor frecuencia por las hormigas (reclutamiento de masas). 
+
+Las bifurcaciones menos prometedoras, pierden feromona y/o acumulan con el tiempo menor cantidad de feromona, debido a la evaporación y a ser menos visitadas por miembros de la colonia.
+
+El continuo tráfico de hormigas da lugar a un rastro de feromona que permite al conjunto encontrar un camino cada vez más corto desde el hormiguero a la comida.
+
+Además tienen una característica muy importante y es que se adaptan rápidamente a los cambios, seleccionando siempre la solución mas eficiente y eficaz.
+
+
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.5]{/Users/mariadelcarmen/Documents/TexMaker/TexMaker/imagenes/Deneubourg1a.png} 
+\includegraphics[scale=0.7]{/Users/mariadelcarmen/Documents/TexMaker/TexMaker/imagenes/Deneubourg2ab.png} 
+
+\caption{Experimento de Deneubourg. Doble puente }\label{fig:Deneubourg}
+\end{figure}
+
+
+Para demostrar esto, Deneubourg \cite{ref1} realizó un experimento de laboratorio \emph{Doble puente} con un tipo concreto de hormigas. Utilizaron dos tipos de circuitos (puentes), figuras 1 y 2. En el primero, las dos ramas del puente tenían la misma longitud. En el segundo, la longitud de una de las dos ramas, era el doble de la otra. Finalmente unió dos puentes cruzados del segundo tipo.
+En el experimento se comprobó que en el primer puente (dos ramas de igual distancia), las hormigas terminan por converger a una sola rama (en este caso cualquiera, ya que son iguales).
+En el segundo caso, las hormigas convergían a la rama más corta.
+Finalmente en el experimento en el que se generó un circuito con dos puentes dobles cruzados, las hormigas consiguen encontrar el camino mas corto.
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.5]{/Users/mariadelcarmen/Documents/TexMaker/TexMaker/imagenes/Deneubourg3.png} 
+
+\caption{Experimento de Deneubourg. Doble puente unidos }\label{fig:DeneubourgDoblePuente}
+\end{figure}
+
+Como resultado de estos experimentos, Deneubourg y su equipo, diseñaron un modelo estocástico del proceso de decisión de las hormigas naturales donde:\\
+
+\begin{equation}
+p_{i,a}=\frac{[k+\tau_{i,a}]^{\alpha}}{[k+\tau_{i,a}]^{\alpha}+[k+\tau_{i,a}]^{\alpha}} \\
+\end{equation}
+
+
+\begin{center}
+\begin{description}
+$p_{i,a}$ es la probabilidad de escoger la rama \emph{\textbf{a}} estando en el punto d decisión \emph{\textbf{i}}, y \\
+$\tau_{i,a}$ es la concentración de \textbf{feromona} en la rama \emph{\textbf{a}}
+\end{description}
+\end{center}
+
+Los algoritmos de optimización de colonia de hormigas reproducen el comportamiento de las hormigas reales en una colonia artificial de hormigas para resolver problemas complejos de camino mínimo.
+
+Cada hormiga artificial es un mecanismo probabilístico de contrucción de soluciones al problema (un agente que imita a la hormiga natural) que utiliza:
+\begin{center}
+	\begin{description}
+		Unos rastros de feromona (artificiales) $\tau$ que cambian con el tiempo para reflejar la experiencia 		adquirida por los agentes en la resolución del problema
+		Información heurística $\eta$ sobre la instancia concreta del problema
+	\end{description}
+\end{center}
+
+\section{Algoritmos de optimización basado en colonias de hormigas}
+Entre los algoritmos de optimización de colonia de hormigas disponibles para problemas de optimización combinatorios se encuentran: \\
+
+\begin{center}
+\begin{tabular}{|c|}
+\hline 
+Algorítmo OCH \\ 
+\hline 
+Sistema de hormigas (SH, ant system) \\ 
+\hline 
+Sistema de colonias de hormigas (SCH, ant colony system) \\ 
+\hline 
+Sistema de hormigas max-min (SHMM, max-min ant system) \\ 
+\hline 
+Sistema de hormigas con ordenación (rank based ant system) \\ 
+\hline 
+Sistema de la mejor-peor hormiga (SMPH, best-worst ant system) \\ 
+\hline 
+\end{tabular}
+\end{center} 
+ 
+Para conocer más sobre estos algoritmos, consulten la documentación que se encuentra en la bibliografía \cite{Apuntes}.
+
+
+\bibliographystyle{acm}
+\bibliography{MiBibliografia}
+
+\end{document}
